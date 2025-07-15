@@ -144,6 +144,23 @@ class SupportStringableTest extends TestCase
         $this->assertSame('ef', (string) $this->stringable('abcdef')->take(-2));
     }
 
+    public function testTail()
+    {
+        $this->assertSame('...framework.',
+            (string) $this->stringable('Laravel is a free, open source PHP web application framework.')->tail(10)
+        );
+        $this->assertSame('...段中文', (string) $this->stringable('这是一段中文')->tail(6));
+
+        $string = 'The PHP framework for web artisans.';
+        $this->assertSame('...tisans.', (string) $this->stringable($string)->tail(7));
+        $this->assertSame('tisans.', (string) $this->stringable($string)->tail(7, ''));
+        $this->assertSame('The PHP framework for web artisans.', (string) $this->stringable($string)->tail(100));
+
+        $nonAsciiString = '这是一段中文';
+        $this->assertSame('...段中文', (string) $this->stringable($nonAsciiString)->tail(6));
+        $this->assertSame('段中文', (string) $this->stringable($nonAsciiString)->tail(6, ''));
+    }
+
     public function testTest()
     {
         $stringable = $this->stringable('foo bar');

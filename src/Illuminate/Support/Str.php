@@ -1794,6 +1794,37 @@ class Str
     }
 
     /**
+     * Limit the number of characters in a string from the end.
+     *
+     * @param  string  $value
+     * @param  int  $limit
+     * @param  string  $start
+     * @param  bool  $preserveWords
+     * @return string
+     */
+    public static function tail($value, $limit = 100, $start = '...', $preserveWords = false)
+    {
+        if (mb_strwidth($value, 'UTF-8') <= $limit) {
+            return $value;
+        }
+
+        if (! $preserveWords) {
+            return $start.ltrim(mb_strimwidth($value, mb_strwidth($value, 'UTF-8') - $limit, $limit, '', 'UTF-8'));
+        }
+
+        $value = trim(preg_replace('/[\n\r]+/', ' ', strip_tags($value)));
+
+        $startPos = mb_strwidth($value, 'UTF-8') - $limit;
+        $trimmed = ltrim(mb_strimwidth($value, $startPos, $limit, '', 'UTF-8'));
+
+        if (mb_substr($value, $startPos - 1, 1, 'UTF-8') === ' ') {
+            return $start . $trimmed;
+        }
+
+        return $start.preg_replace("/.*?\s(.+)/u", '$1', $trimmed);
+    }
+
+    /**
      * Convert the given string to Base64 encoding.
      *
      * @param  string  $string

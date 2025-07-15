@@ -1040,6 +1040,19 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
     }
 
     /**
+     * Limit the number of characters in a string from the end.
+     *
+     * @param  int  $limit
+     * @param  string  $start
+     * @param  bool  $preserveWords
+     * @return static
+     */
+    public function tail($limit = 100, $start = '...', $preserveWords = false)
+    {
+        return new static(Str::tail($this->value, $limit, $start, $preserveWords));
+    }
+
+    /**
      * Trim the string of the given characters.
      *
      * @param  string  $characters

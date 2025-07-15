@@ -1267,6 +1267,28 @@ class SupportStrTest extends TestCase
         $this->assertSame('ü', Str::take('üöä', 1));
     }
 
+    public function testTail()
+    {
+        $this->assertSame('...framework.', Str::tail('Laravel is a free, open source PHP web application framework.', 10));
+        $this->assertSame('...段中文', Str::tail('这是一段中文', 6));
+        $this->assertSame('...application framework.', Str::tail('Laravel is a free, open source PHP web application framework.', 15, preserveWords: true));
+
+        $string = 'The PHP framework for web artisans.';
+        $this->assertSame('...tisans.', Str::tail($string, 7));
+        $this->assertSame('...web artisans.', Str::tail($string, 10, preserveWords: true));
+        $this->assertSame('tisans.', Str::tail($string, 7, ''));
+        $this->assertSame('web artisans.', Str::tail($string, 10, '', true));
+        $this->assertSame('The PHP framework for web artisans.', Str::tail($string, 100));
+        $this->assertSame('The PHP framework for web artisans.', Str::tail($string, 100, preserveWords: true));
+        $this->assertSame('...framework for web artisans.', Str::tail($string, 20, preserveWords: true));
+
+        $nonAsciiString = '这是一段中文';
+        $this->assertSame('...段中文', Str::tail($nonAsciiString, 6));
+        $this->assertSame('...段中文', Str::tail($nonAsciiString, 6, preserveWords: true));
+        $this->assertSame('段中文', Str::tail($nonAsciiString, 6, ''));
+        $this->assertSame('段中文', Str::tail($nonAsciiString, 6, '', true));
+    }
+
     public function testLcfirst()
     {
         $this->assertSame('laravel', Str::lcfirst('Laravel'));
